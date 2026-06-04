@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Configuración
 st.set_page_config(page_title="Métodos Numéricos", layout="centered")
@@ -45,6 +46,8 @@ if "Integración" in metodo:
         h = (b - a) / n
         x = np.linspace(a, b, n + 1)
         y = f(x)
+
+        resultado = None
 
         # =========================
         # TRAPECIO
@@ -103,6 +106,45 @@ if "Integración" in metodo:
 
         st.info(f"Tamaño del paso h = {h:.4f}")
 
+        # =========================
+        # GRÁFICA DE INTEGRACIÓN
+        # =========================
+        if resultado is not None:
+
+            x_graf = np.linspace(a, b, 500)
+            y_graf = f(x_graf)
+
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+            ax.plot(
+                x_graf,
+                y_graf,
+                linewidth=2,
+                label="f(x)"
+            )
+
+            ax.scatter(
+                x,
+                y,
+                s=50,
+                label="Puntos"
+            )
+
+            ax.fill_between(
+                x,
+                y,
+                alpha=0.3,
+                label="Área aproximada"
+            )
+
+            ax.set_title("Representación de la Integral")
+            ax.set_xlabel("x")
+            ax.set_ylabel("f(x)")
+            ax.grid(True)
+            ax.legend()
+
+            st.pyplot(fig)
+
 # =========================
 # DIFERENCIACIÓN
 # =========================
@@ -121,6 +163,41 @@ elif metodo == "Diferenciación Numérica":
             f"Derivada aproximada = {derivada:.6f}"
         )
 
+        # =========================
+        # GRÁFICA
+        # =========================
+        x_graf = np.linspace(
+            x0 - 2,
+            x0 + 2,
+            500
+        )
+
+        y_graf = f(x_graf)
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(
+            x_graf,
+            y_graf,
+            linewidth=2,
+            label="f(x)"
+        )
+
+        ax.scatter(
+            [x0],
+            [f(x0)],
+            s=100,
+            label="Punto evaluado"
+        )
+
+        ax.set_title("Diferenciación Numérica")
+        ax.set_xlabel("x")
+        ax.set_ylabel("f(x)")
+        ax.grid(True)
+        ax.legend()
+
+        st.pyplot(fig)
+
 # =========================
 # INTERPOLACIÓN
 # =========================
@@ -132,7 +209,10 @@ elif metodo == "Interpolación Lineal":
     x1 = st.number_input("x1", value=3.0)
     y1 = st.number_input("y1", value=6.0)
 
-    x = st.number_input("Valor a interpolar", value=2.0)
+    x = st.number_input(
+        "Valor a interpolar",
+        value=2.0
+    )
 
     if st.button("Calcular"):
 
@@ -143,3 +223,31 @@ elif metodo == "Interpolación Lineal":
         st.success(
             f"Interpolación = {y:.6f}"
         )
+
+        # =========================
+        # GRÁFICA
+        # =========================
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(
+            [x0, x1],
+            [y0, y1],
+            marker="o",
+            linewidth=2,
+            label="Recta de interpolación"
+        )
+
+        ax.scatter(
+            [x],
+            [y],
+            s=100,
+            label="Punto interpolado"
+        )
+
+        ax.set_title("Interpolación Lineal")
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.grid(True)
+        ax.legend()
+
+        st.pyplot(fig)
